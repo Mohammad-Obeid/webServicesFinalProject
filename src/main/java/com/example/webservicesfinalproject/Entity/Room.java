@@ -17,7 +17,9 @@ public class Room implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int roomID;
     private String type,feature,size;
-    private String status = "Free";
+    private String status = "free";
     private int capacity;
     private double price;
+    private int roomFloor, numOfBeds;
+
 }

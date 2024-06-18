@@ -1,2 +1,5 @@
-package com.example.webservicesfinalproject.token;public class TokenType {
+package com.example.webservicesfinalproject.token;
+
+public enum TokenType {
+    BEARER
 }

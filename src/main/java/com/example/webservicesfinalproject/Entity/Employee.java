@@ -3,6 +3,8 @@ package com.example.webservicesfinalproject.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "employee")
 @Data
@@ -17,4 +19,6 @@ public class Employee {
     private String employeeRole;
     @OneToOne(cascade = CascadeType.ALL)
     private User user;
+    private String status="free";
+    private LocalDateTime statusSinceWhen;
 }
