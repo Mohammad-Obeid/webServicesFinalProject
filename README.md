@@ -54,7 +54,7 @@ The Hotel Management System is designed to streamline operations for both hotel 
 - To build and run the Docker image:
    - Build the Docker image: docker build -t hotel-management-system .
    - Run the Docker container: docker run -p 8080:8080 hotel-management-system
-   - ### Here is the link
+   - ### The Docker image for this application can be found on DockerHub at the following link:
 
 ## What We Have Learned
 - Plan, design, develop and document an end-to-end backend application with exposing all resources through RESTful APIs with adopting the microservice architecture. 
