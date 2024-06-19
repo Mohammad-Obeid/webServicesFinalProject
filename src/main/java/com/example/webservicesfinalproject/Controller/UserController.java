@@ -34,4 +34,19 @@ public class UserController {
                         .body(null));
     }
 
+    @Operation(summary = "Register a new customer", description = "Registers a new customer.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully registered the new customer"),
+            @ApiResponse(responseCode = "302", description = "Customer registration was found to be unnecessary (duplicate or other reason)")
+    })
+    @PostMapping("/register")
+    public ResponseEntity<UserDTO> CreateNewCustomer(@RequestBody UserDTO newUser
+                                                     ) {
+        Optional<UserDTO> user = Optional.ofNullable(userservice.CreateNewEmployee(newUser));
+        return user.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.FOUND)
+                        .body(null));
+    }
+
+
 }

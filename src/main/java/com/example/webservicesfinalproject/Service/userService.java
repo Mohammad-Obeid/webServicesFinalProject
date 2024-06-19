@@ -1,8 +1,12 @@
 package com.example.webservicesfinalproject.Service;
 
+import com.example.webservicesfinalproject.Configuration.JwtService;
 import com.example.webservicesfinalproject.DTO.UserDTO;
 import com.example.webservicesfinalproject.Entity.*;
 import com.example.webservicesfinalproject.Repository.*;
+import com.example.webservicesfinalproject.auth.AuthenticationResponse;
+import com.example.webservicesfinalproject.auth.AuthenticationService;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +29,9 @@ public class userService {
     private final TaskRepository taskRepo;
     private final EmployeeRepository empRepo;
     private final WorkShiftRepository shiftRepo;
-
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+    private final AuthenticationService authserv;
 
     public userService(UserRepository userRepo,
                        RoomRepository roomRepo,
@@ -33,7 +39,7 @@ public class userService {
                        CustomerRepository custRepo,
                        TaskRepository taskRepo,
                        EmployeeRepository empRepo,
-                       WorkShiftRepository shiftRepo) {
+                       WorkShiftRepository shiftRepo, JwtService jwtService, AuthenticationManager authenticationManager, AuthenticationService authserv) {
         this.userRepo = userRepo;
         this.roomRepo=roomRepo;
         this.resRepo=resRepo;
@@ -41,6 +47,9 @@ public class userService {
         this.taskRepo=taskRepo;
         this.empRepo=empRepo;
         this.shiftRepo=shiftRepo;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+        this.authserv = authserv;
     }
 
 
@@ -50,7 +59,6 @@ public class userService {
         user.setUserEmail(userDto.getUserEmail());
         user.setUserPassword(userDto.getUserPassword());
         user.setUserPhoneNumber(userDto.getUserPhoneNumber());
-        user.setRole(Role.valueOf(userDto.getUserRole()));
         return user;
     }
 
@@ -60,7 +68,6 @@ public class userService {
         userDto.setUserEmail(user.getUserEmail());
         userDto.setUserPassword(user.getUserPassword());
         userDto.setUserPhoneNumber(user.getUserPhoneNumber());
-        userDto.setUserRole(String.valueOf(user.getRole()));
         return userDto;
     }
 
@@ -76,49 +83,60 @@ public class userService {
             return null;
         }
         User us = mapToEntity(newUser);
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        us.setUserPassword(encoder.encode(us.getUserPassword()));
-        us.setRole(Role.Customer);
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        System.out.println("?/////////////////////////////?????????????????????????????//////////////////////////");
+        System.out.println(newUser.getUserPassword());
+        us.setUserPassword(us.getUserPassword());
+        us.setRole(Role.CUSTOMER);
         Customer cust = new Customer();
         cust.setUser(us);
         us.setCustomer(cust);
         us.setJoinDate(LocalDateTime.now());
-        userRepo.save(us);
+        User uss = userRepo.save(us);
+        var jwtToken = jwtService.generateToken(uss);
+        var refreshToken = jwtService.generateRefreshToken(uss);
+        authserv.saveUserToken(uss, jwtToken);
+        AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .build();
+
         return mapToDto(us);
     }
 
 
 
 
-    public UserDTO CreateNewEmployee(UserDTO newUser, int adminID) {
+    public UserDTO CreateNewEmployee(UserDTO newUser) {
         Optional<User> user = userRepo.findByUserEmail(newUser.getUserEmail());
-        Optional<User> usCheck = userRepo.findByEmployeeEmployeeID(adminID);
-        if(usCheck.isPresent() &&
-                usCheck.get().getRole() == Role.Employee
-        && usCheck.get().getEmployee().getEmployeeRole().equals("Admin")) {
             if (user.isPresent()) {
                 return null;
             }
             User us = mapToEntity(newUser);
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            us.setUserPassword(encoder.encode(us.getUserPassword()));
-            us.setRole(Role.Employee);
+            us.setUserPassword((us.getUserPassword()));
+            us.setRole(Role.EMPLOYEE);
             Employee emp = new Employee();
             emp.setUser(us);
             emp.setEmployeeRole(newUser.getEmp().getEmployeeRole());
             us.setEmployee(emp);
             us.setJoinDate(LocalDateTime.now());
-            userRepo.save(us);
+            User uss = userRepo.save(us);
+            var jwtToken = jwtService.generateToken(uss);
+            var refreshToken = jwtService.generateRefreshToken(uss);
+            authserv.saveUserToken(uss, jwtToken);
+            AuthenticationResponse.builder()
+                    .accessToken(jwtToken)
+                    .refreshToken(refreshToken)
+                    .build();
             return mapToDto(us);
-        }
-        return null;
+
     }
 
 
     public UserDTO DeleteEmployee(int adminID, int empID) {
         Optional<User> admin = userRepo.findByEmployeeEmployeeID(adminID);
         if(admin.isPresent()){
-            if(admin.get().getRole()==Role.Employee && admin.get().getEmployee().getEmployeeRole().equals("Admin")){
+            if(admin.get().getRole()==Role.EMPLOYEE && admin.get().getEmployee().getEmployeeRole().equals("Admin")){
                 Optional<User> employee = userRepo.findByEmployeeEmployeeID(empID);
                 if(employee.isPresent()){
                     UserDTO us = new UserDTO();
@@ -138,7 +156,7 @@ public class userService {
         Optional<List<User>> user = userRepo.findAllByUserName(custName);
         Optional<User> usCheck = userRepo.findById(adminID);
         if(usCheck.isPresent() &&
-                usCheck.get().getRole() == Role.Employee
+                usCheck.get().getRole() == Role.EMPLOYEE
                 && usCheck.get().getEmployee().getEmployeeRole().equals("Admin")) {
         List<UserDTO> userDto = new ArrayList<>();
         for(int i=0;i<user.get().size();i++){
@@ -155,7 +173,7 @@ public class userService {
         Optional<User> user = userRepo.findByUserEmail(custemail);
         Optional<User> usCheck = userRepo.findById(adminID);
         if(usCheck.isPresent() &&
-                usCheck.get().getRole() == Role.Employee
+                usCheck.get().getRole() == Role.EMPLOYEE
                 && usCheck.get().getEmployee().getEmployeeRole().equals("Admin")) {
         UserDTO userdto = mapToDto(user.get());
         return userdto;}
@@ -165,7 +183,7 @@ public class userService {
     public List<Room> getFreeRooms(int adminID) {
         Optional<User> usCheck = userRepo.findById(adminID);
         if(usCheck.isPresent() &&
-                usCheck.get().getRole() == Role.Employee
+                usCheck.get().getRole() == Role.EMPLOYEE
                 && usCheck.get().getEmployee().getEmployeeRole().equals("Admin")) {
         Optional<List<Room>> rooms = roomRepo.findAllByStatus("free");
         return rooms.get();}
@@ -187,7 +205,7 @@ public class userService {
     public Reservation CancelReservation(int id, int adminID) {
         Optional<User> usCheck = userRepo.findById(adminID);
         if(usCheck.isPresent() &&
-                usCheck.get().getRole() == Role.Employee
+                usCheck.get().getRole() == Role.EMPLOYEE
                 && usCheck.get().getEmployee().getEmployeeRole().equals("Admin")) {
         Optional<Reservation> res = resRepo.findById(id);
         if(res.isPresent()){
@@ -211,7 +229,7 @@ public class userService {
     public Reservation CantCancelReservation(int id, int adminID) {
         Optional<User> usCheck = userRepo.findById(adminID);
         if(usCheck.isPresent() &&
-                usCheck.get().getRole() == Role.Employee
+                usCheck.get().getRole() == Role.EMPLOYEE
                 && usCheck.get().getEmployee().getEmployeeRole().equals("Admin")) {
             Optional<Reservation> res = resRepo.findById(id);
             if (res.isPresent()) {
@@ -228,7 +246,7 @@ public class userService {
     public Reservation SearchCustomerReservationByCustNameAndDate(String custName, LocalDate resDate, int adminID) {
         Optional<User> usCheck = userRepo.findById(adminID);
         if(usCheck.isPresent() &&
-                usCheck.get().getRole() == Role.Employee
+                usCheck.get().getRole() == Role.EMPLOYEE
                 && usCheck.get().getEmployee().getEmployeeRole().equals("Admin")) {
         Optional<Reservation> reservation = resRepo.findByCustomerUserUserNameAndAndCheckinDate(custName,resDate);
         return reservation.orElse(null);}
@@ -238,7 +256,7 @@ public class userService {
     public Reservation Checkin(int adminID, int resID, String custName) {
         Optional<User> usCheck = userRepo.findById(adminID);
         if(usCheck.isPresent() &&
-                usCheck.get().getRole() == Role.Employee
+                usCheck.get().getRole() == Role.EMPLOYEE
                 && usCheck.get().getEmployee().getEmployeeRole().equals("Admin")) {
         Optional<Customer> cust = custRepo.findByUserUserName(custName);
         Optional<Reservation> res = resRepo.findById(resID);
@@ -262,7 +280,7 @@ public class userService {
     public Reservation Checkout(int adminID, int resID, String custName) {
         Optional<User> usCheck = userRepo.findById(adminID);
         if(usCheck.isPresent() &&
-                usCheck.get().getRole() == Role.Employee
+                usCheck.get().getRole() == Role.EMPLOYEE
                 && usCheck.get().getEmployee().getEmployeeRole().equals("Admin")) {
             Optional<Customer> cust = custRepo.findByUserUserName(custName);
             Optional<Reservation> res = resRepo.findById(resID);
@@ -390,7 +408,7 @@ public class userService {
     public List<Employee> GetFreeHousekeepers(int adminID) {
         Optional<Employee> admin = empRepo.findById(adminID);
         if(admin.isPresent() && admin.get().getEmployeeRole().equals("Admin")){
-            Optional<List<Employee>> freehouseKeepers = empRepo.findByUserRoleAndEmployeeRoleAndStatus(Role.Employee,"housekeeper","free");
+            Optional<List<Employee>> freehouseKeepers = empRepo.findByUserRoleAndEmployeeRoleAndStatus(Role.EMPLOYEE,"housekeeper","free");
             return freehouseKeepers.orElse(null);
         }
         return null;
@@ -399,7 +417,7 @@ public class userService {
     public List<Employee> GetBusyHousekeepers(int adminID) {
         Optional<Employee> admin = empRepo.findById(adminID);
         if(admin.isPresent() && admin.get().getEmployeeRole().equals("Admin")){
-            Optional<List<Employee>> freehouseKeepers = empRepo.findByUserRoleAndEmployeeRoleAndStatus(Role.Employee,"housekeeper","busy");
+            Optional<List<Employee>> freehouseKeepers = empRepo.findByUserRoleAndEmployeeRoleAndStatus(Role.EMPLOYEE,"housekeeper","busy");
             return freehouseKeepers.orElse(null);
         }
         return null;

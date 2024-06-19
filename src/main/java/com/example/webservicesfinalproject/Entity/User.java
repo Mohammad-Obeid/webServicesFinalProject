@@ -4,6 +4,7 @@ import com.example.webservicesfinalproject.token.Token;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
@@ -12,9 +13,9 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Builder
-@Table(name = "user")
 @Data
+@Table(name = "user")
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,7 +35,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String userPassword;
 
     @Column(nullable = false)
@@ -53,8 +54,10 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
+
+
 
     @Override
     public String getPassword() {
@@ -63,7 +66,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return userEmail;
     }
 
     @Override
@@ -84,5 +87,16 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userID=" + userID +
+                ", userName='" + userName + '\'' +
+                // Avoid including employee.toString() if it includes user.toString()
+                ", employee=" + (employee != null ? employee.getEmployeeRole() : "null") +
+                '}';
     }
 }

@@ -19,6 +19,18 @@ public class Employee {
     private String employeeRole;
     @OneToOne(cascade = CascadeType.ALL)
     private User user;
-    private String status="free";
+    private String status = "free";
     private LocalDateTime statusSinceWhen;
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "employeeID=" + employeeID +
+                ", employeeRole='" + employeeRole + '\'' +
+                ", status='" + status + '\'' +
+                ", statusSinceWhen=" + statusSinceWhen +
+                // Exclude `user` to avoid recursion
+                // ", user=" + user +
+                '}';
+    }
 }

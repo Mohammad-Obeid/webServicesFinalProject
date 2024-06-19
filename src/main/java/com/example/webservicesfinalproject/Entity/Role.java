@@ -15,20 +15,28 @@ import static com.example.webservicesfinalproject.Entity.Permission.*;
 public enum Role {
 
     USER(Collections.emptySet()),
-    Employee(
+    EMPLOYEE(
             Set.of(
-                    Employee_READ,
-                    Employee_UPDATE,
-                    Employee_DELETE,
-                    Employee_CREATE,
-                    Customer_READ,
-                    Customer_UPDATE,
-                    Customer_DELETE,
-                    Customer_CREATE
+                    EMPLOYEE_READ,
+                    EMPLOYEE_UPDATE,
+                    EMPLOYEE_DELETE,
+                    EMPLOYEE_CREATE,
+                    CUSTOMER_READ,
+                    CUSTOMER_UPDATE,
+                    CUSTOMER_DELETE,
+                    CUSTOMER_CREATE
             )
     ),
-    Customer(Set.of(Customer_READ, Customer_CREATE, Customer_UPDATE, Customer_DELETE)
+    CUSTOMER(
+            Set.of(
+                    CUSTOMER_READ,
+                    CUSTOMER_UPDATE,
+                    CUSTOMER_DELETE,
+                    CUSTOMER_CREATE
+            )
     );
+
+
 
     @Getter
     private final Set<Permission> permissions;
@@ -38,7 +46,8 @@ public enum Role {
                 .stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
                 .collect(Collectors.toList());
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+        authorities.add(new SimpleGrantedAuthority(this.name()));
         return authorities;
     }
+
 }

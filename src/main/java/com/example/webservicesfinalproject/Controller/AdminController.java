@@ -36,7 +36,7 @@ public class AdminController {
     @PostMapping("/{adminID}/Emp")
     public ResponseEntity<UserDTO> CreateNewEmployee(@RequestBody UserDTO newUser,
                                                      @PathVariable("adminID") int adminID) {
-        Optional<UserDTO> user = Optional.ofNullable(userservice.CreateNewEmployee(newUser, adminID));
+        Optional<UserDTO> user = Optional.ofNullable(userservice.CreateNewEmployee(newUser));
         return user.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.FOUND)
                         .body(null));

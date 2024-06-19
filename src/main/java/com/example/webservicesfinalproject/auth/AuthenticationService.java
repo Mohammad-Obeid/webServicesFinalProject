@@ -4,8 +4,6 @@ import com.example.webservicesfinalproject.Entity.Customer;
 import com.example.webservicesfinalproject.Entity.Employee;
 import com.example.webservicesfinalproject.Entity.Role;
 import com.example.webservicesfinalproject.Entity.User;
-import com.example.webservicesfinalproject.Repository.CustomerRepository;
-import com.example.webservicesfinalproject.Repository.EmployeeRepository;
 import com.example.webservicesfinalproject.Repository.UserRepository;
 import com.example.webservicesfinalproject.token.Token;
 import com.example.webservicesfinalproject.token.TokenRepository;
@@ -17,11 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -29,14 +25,39 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-
     private final UserRepository repository;
-    private final EmployeeRepository empRepo;
-    private final CustomerRepository custRepo;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
+//  private final CustomerService customerService;
+//
+//  public AuthenticationResponse register(RegisterRequest request) {
+//    var customerDto=new CustomerDTO();
+//    customerDto.setFirstName(request.getFirstname());
+//    customerDto.setLastName(request.getLastname());
+//    customerDto.setBornAt(request.getBornAt());
+//
+//    var customer= customerService.createCustomer(customerDto);
+//
+//    var user = User.builder()
+//        .firstname(request.getFirstname())
+//        .lastname(request.getLastname())
+//        .email(request.getEmail())
+//        .password(passwordEncoder.encode(request.getPassword()))
+//        .customerId(customer.getId())
+//        .role(Role.CUSTOMER)
+//        .build();
+//    var savedUser = repository.save(user);
+//    var jwtToken = jwtService.generateToken(user);
+//    var refreshToken = jwtService.generateRefreshToken(user);
+//    saveUserToken(savedUser, jwtToken);
+//    return AuthenticationResponse.builder()
+//        .accessToken(jwtToken)
+//            .refreshToken(refreshToken)
+//        .build();
+//  }
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
@@ -51,16 +72,16 @@ public class AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
-        if(user.getRole()== Role.Employee){
+        if(user.getRole()== Role.EMPLOYEE){
             Employee emp = new Employee();
             emp.setUser(savedUser);
             emp.setEmployeeRole(request.getEmp().getEmployeeRole());
-            empRepo.save(emp);
+//            empRepo.save(emp);
         }
         else{
             Customer customer = new Customer();
             customer.setUser(savedUser);
-            custRepo.save(customer);
+//            custRepo.save(customer);
         }
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
@@ -68,19 +89,20 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        System.out.println("mail::::::::::::::::::::"+request.getEmail());
-
-        //Attempts to authenticate the passed Authentication object, returning a
-        // fully populated Authentication object (including granted authorities) if successful.
-        authenticationManager.authenticate(
+    public AuthenticationResponse  authenticate(AuthenticationRequest request) {
+        String email=request.getEmail();
+        System.out.println("email:"+email);
+        System.out.println("pass:"+request.getPassword());
+        Authentication auth=authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )
         );
-        var user = repository.findByUserEmail(request.getEmail())
+        System.out.println(auth.toString());
+        var user = repository.findByUserEmail(email)
                 .orElseThrow();
+        System.out.println(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
@@ -91,7 +113,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    private void saveUserToken(User user, String jwtToken) {
+    public void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
                 .token(jwtToken)

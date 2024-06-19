@@ -8,8 +8,15 @@ import com.example.webservicesfinalproject.token.Token;
 
 public interface TokenRepository extends JpaRepository<Token, Integer> {
 
-    @Query("SELECT t FROM Token t INNER JOIN t.user u WHERE u.userID = :id AND (t.expired = false OR t.revoked = false)")
-    List<Token> findAllValidTokenByUser(Integer id);
+    @Query(value = """
+             SELECT t FROM Token t inner join User u\s
+             on t.user.userID = u.userID\s 
+            where u.userID = :id and (t.expired = false or t.revoked = false)\s
+            """)
+
+    List<Token> findAllValidTokenByUser(int id);
+
+
 
     Optional<Token> findByToken(String token);
 }
