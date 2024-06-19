@@ -43,15 +43,15 @@ The Hotel Management System is designed to streamline operations for both hotel 
 ![ERD_HotelMS](https://github.com/Mohammad-Obeid/webServicesFinalProject/assets/147950746/b1cc7cb8-ae1e-4ac3-81ba-f2f976f712e9)
 
 ## How to Build, Package, and Run the Application
-- ###To build the application, we should run the following commands on terminal:
+- To build the application, we should run the following commands on terminal:
     - ./mvnw clean 
     - ./mvnw install
-- ###To package the application into a JAR file, we should run the following command on terminal:
+- To package the application into a JAR file, we should run the following command on terminal:
    - ./mvnw package
-- ###To run the application using the generated JAR file, we should run the following command on terminal:
+- To run the application using the generated JAR file, we should run the following command on terminal:
    - java -jar target/hotel-management-system-0.0.1-SNAPSHOT.jar
 
-- ###To build and run the Docker image:
+- To build and run the Docker image:
    - Build the Docker image: docker build -t hotel-management-system .
    - Run the Docker container: docker run -p 8080:8080 hotel-management-system
    - ### Here is the link
