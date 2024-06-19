@@ -40,7 +40,9 @@ The Hotel Management System is designed to streamline operations for both hotel 
 
 ## ER Diagram
 
-![ERD_HotelMS](https://github.com/Mohammad-Obeid/webServicesFinalProject/assets/147950746/b1cc7cb8-ae1e-4ac3-81ba-f2f976f712e9)
+
+![ERD_HotelMS (2)](https://github.com/Mohammad-Obeid/webServicesFinalProject/assets/147950746/5b5537a4-2731-4a25-9c75-03550c5708e8)
+
 
 ## How to Build, Package, and Run the Application
 - ### To build the application, we should run the following commands on terminal:
