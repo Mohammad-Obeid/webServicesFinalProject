@@ -49,22 +49,22 @@ The Hotel Management System is designed to streamline operations for both hotel 
 - Documenting APIs using OAS standards to ensure they are well-defined and easily understandable by other developers.
 - Using Swaager UI.
 - API security with JWT.
-  -- JWT Authentication and Authorization:
-    --- Securing APIs using JSON Web Tokens (JWT) for authentication and authorization.
-    --- Implementing role-based access control (RBAC) to manage permissions for different user roles (customer and admin).
-    --- Developing secure signup and authentication endpoints.
+  - JWT Authentication and Authorization:
+    - Securing APIs using JSON Web Tokens (JWT) for authentication and authorization.
+    - Implementing role-based access control (RBAC) to manage permissions for different user roles (customer and admin).
+    - Developing secure signup and authentication endpoints.
 - Versioning a RESTful web API.
-  -- API Versioning:
-    --- Understanding different API versioning strategies (URL versioning, query parameter versioning, and header versioning).
-    --- Implementing and managing multiple versions of APIs to ensure backward compatibility and smooth upgrades.
+  - API Versioning:
+    - Understanding different API versioning strategies (URL versioning, query parameter versioning, and header versioning).
+    - Implementing and managing multiple versions of APIs to ensure backward compatibility and smooth upgrades.
 - Database Initialization and Data Population.
-  -- Using Spring Boot frameworks to initialize the database schema, populate initial data, and generate sample data automatically.
-  -- Ensuring the database is ready for use without manual intervention.
+  - Using Spring Boot frameworks to initialize the database schema, populate initial data, and generate sample data automatically.
+  - Ensuring the database is ready for use without manual intervention.
 - Data Validation and Exception Handling.
-  -- Implementing robust data validation to ensure the integrity and correctness of the data being processed.
-  -- Using validation frameworks and libraries to streamline validation logic.
-  -- Implementing comprehensive exception handling to manage and respond to errors gracefully.
-  -- Using custom exceptions, global exception handlers, and proper logging mechanisms.   
+  - Implementing robust data validation to ensure the integrity and correctness of the data being processed.
+  - Using validation frameworks and libraries to streamline validation logic.
+  - Implementing comprehensive exception handling to manage and respond to errors gracefully.
+  - Using custom exceptions, global exception handlers, and proper logging mechanisms.   
 - Using Docker to containerize the application for easy deployment and scalability.
 - Using Postman to test APIs.
 - Version Control with Git: Understanding the fundamental concepts of version control systems and how to effectively use Git to track changes in my project.
