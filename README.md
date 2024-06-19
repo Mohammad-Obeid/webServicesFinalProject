@@ -41,6 +41,21 @@ The Hotel Management System is designed to streamline operations for both hotel 
 ## ER Diagram
 
 ![ERD_HotelMS](https://github.com/Mohammad-Obeid/webServicesFinalProject/assets/147950746/b1cc7cb8-ae1e-4ac3-81ba-f2f976f712e9)
+
+## How to Build, Package, and Run the Application
+- ### To build the application, we should run the following commands on terminal:
+    - ./mvnw clean 
+    - ./mvnw install
+- ### To package the application into a JAR file, we should run the following command on terminal:
+   - ./mvnw package
+- ### To run the application using the generated JAR file, we should run the following command on terminal:
+   - java -jar target/hotel-management-system-0.0.1-SNAPSHOT.jar
+
+- ### To build and run the Docker image:
+   - Build the Docker image: docker build -t hotel-management-system .
+   - Run the Docker container: docker run -p 8080:8080 hotel-management-system
+   - ### The Docker image for this application can be found on DockerHub at the following link:
+
 ## What We Have Learned
 - Plan, design, develop and document an end-to-end backend application with exposing all resources through RESTful APIs with adopting the microservice architecture. 
 - Designing and implementing RESTful APIs using Spring Boot.

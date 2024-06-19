@@ -1,4 +1,4 @@
-package com.example.webservicesfinalproject.dto;
+package com.example.webservicesfinalproject.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
