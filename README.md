@@ -64,7 +64,7 @@ The Hotel Management System is designed to streamline operations for both hotel 
 - How to implement the entity relations in the DAO (Data Access Object) layer, so we can now implementing and managing relationships between entities (one-to-one, one-to-many, many-to-many) in the DAO layer. And we using ORM tools like Hibernate or JPA to map database tables to Java objects.
 - Applying best practices in coding, and now we can implementing security best practices, performance optimizations, and ensuring code quality.
 - Documenting APIs using OAS standards to ensure they are well-defined and easily understandable by other developers.
-- Using Swaager UI. To see that gon in ---> ## http://localhost:8080/swagger-ui/index.html
+- Using Swaager UI. To see that go in ---> http://localhost:8080/swagger-ui/index.html
 - API security with JWT.
   - JWT Authentication and Authorization:
     - Securing APIs using JSON Web Tokens (JWT) for authentication and authorization.
