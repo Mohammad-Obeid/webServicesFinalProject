@@ -40,7 +40,9 @@ The Hotel Management System is designed to streamline operations for both hotel 
 
 ## ER Diagram
 
-![ERD_HotelMS](https://github.com/Mohammad-Obeid/webServicesFinalProject/assets/147950746/b1cc7cb8-ae1e-4ac3-81ba-f2f976f712e9)
+
+![ERD_HotelMS (2)](https://github.com/Mohammad-Obeid/webServicesFinalProject/assets/147950746/5b5537a4-2731-4a25-9c75-03550c5708e8)
+
 
 ## How to Build, Package, and Run the Application
 - ### To build the application, we should run the following commands on terminal:
@@ -54,7 +56,7 @@ The Hotel Management System is designed to streamline operations for both hotel 
 - ### To build and run the Docker image:
    - Build the Docker image: docker build -t hotel-management-system .
    - Run the Docker container: docker run -p 8080:8080 hotel-management-system
-   - ### The Docker image for this application can be found on DockerHub at the following link:
+   - ### The Docker image for this application can be found on DockerHub at the following link: https://hub.docker.com/repository/docker/salahm2002/project2-hotel-management-system-image/general
 
 ## What We Have Learned
 - Plan, design, develop and document an end-to-end backend application with exposing all resources through RESTful APIs with adopting the microservice architecture. 
@@ -62,7 +64,7 @@ The Hotel Management System is designed to streamline operations for both hotel 
 - How to implement the entity relations in the DAO (Data Access Object) layer, so we can now implementing and managing relationships between entities (one-to-one, one-to-many, many-to-many) in the DAO layer. And we using ORM tools like Hibernate or JPA to map database tables to Java objects.
 - Applying best practices in coding, and now we can implementing security best practices, performance optimizations, and ensuring code quality.
 - Documenting APIs using OAS standards to ensure they are well-defined and easily understandable by other developers.
-- Using Swaager UI.
+- Using Swaager UI. To see that go in ---> http://localhost:8080/swagger-ui/index.html
 - API security with JWT.
   - JWT Authentication and Authorization:
     - Securing APIs using JSON Web Tokens (JWT) for authentication and authorization.
